@@ -1,15 +1,15 @@
-import pad, inphand from "/src/padinp";
+import { pad, inphand } from "/src/padinp";
 import ball from "/src/ball";
 import brk from "/src/brk";
 
-import { buildLevel, level1, level2 } from "/src/levels";
+import { buildlvl, lvl1, lvl2 } from "/src/lvls";
 
 const state = {
   PAUSED: 0,
   RUNNING: 1,
   MENU: 2,
   GAMEOVER: 3,
-  NEWLEVEL: 4
+  NEWlvl: 4
 };
 
 export default class Game {
@@ -23,8 +23,8 @@ export default class Game {
     this.brks = [];
     this.lives = 3;
 
-    this.levels = [level1, level2];
-    this.currentLevel = 0;
+    this.lvls = [lvl1, lvl2];
+    this.currentlvl = 0;
 
     new inphand(this.pad, this);
   }
@@ -32,11 +32,11 @@ export default class Game {
   start() {
     if (
       this.state !== state.MENU &&
-      this.state !== state.NEWLEVEL
+      this.state !== state.NEWlvl
     )
       return;
 
-    this.brks = buildLevel(this, this.levels[this.currentLevel]);
+    this.brks = buildlvl(this, this.lvls[this.currentlvl]);
     this.ball.reset();
     this.gameObjects = [this.ball, this.pad];
 
@@ -54,8 +54,8 @@ export default class Game {
       return;
 
     if (this.brks.length === 0) {
-      this.currentLevel++;
-      this.state = state.NEWLEVEL;
+      this.currentlvl++;
+      this.state = state.NEWlvl;
       this.start();
     }
 
