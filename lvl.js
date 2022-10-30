@@ -1,6 +1,6 @@
 import brk from "/src/brk";
 
-export function buildLevel(game, level) {
+export function buildLvl(game, level) {
   let brks = [];
 
   level.forEach((row, rowIndex) => {
