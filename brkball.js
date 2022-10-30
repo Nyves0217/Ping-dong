@@ -1,6 +1,6 @@
 import { detectCollision } from "./coldetec";
 
-export default class Brick {
+export default class brk{
   constructor(game, position) {
     this.image = document.getElementById("img_brick");
 
