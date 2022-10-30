@@ -1,7 +1,7 @@
-import { pad, inphand } from "/src/padinp";
-import { brk, ball } from "/src/brkball";
+import { pad, inphand } from "/main/padinp";
+import { brk, ball } from "/main/brkball";
 
-import { buildlvl, lvl1, lvl2 } from "/src/lvls";
+import { buildlvl, lvl1, lvl2 } from "/main/lvls";
 
 const state = {
   PAUSED: 0,
