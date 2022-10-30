@@ -1,4 +1,4 @@
-import brk from "/src/brk";
+import brk from "/main/brk";
 
 export function buildLvl(game, level) {
   let brks = [];
