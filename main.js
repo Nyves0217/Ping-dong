@@ -1,6 +1,5 @@
 import { pad, inphand } from "/src/padinp";
-import ball from "/src/ball";
-import brk from "/src/brk";
+import { brk, ball } from "/src/brkball";
 
 import { buildlvl, lvl1, lvl2 } from "/src/lvls";
 
