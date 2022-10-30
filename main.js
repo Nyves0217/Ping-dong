@@ -1,11 +1,11 @@
-import Paddle from "/src/pad";
-import InputHandler from "/src/inp";
-import Ball from "/src/ball";
-import Brick from "/src/brick";
+import pad from "/src/pad";
+import inphand from "/src/inp";
+import ball from "/src/ball";
+import brk from "/src/brk";
 
 import { buildLevel, level1, level2 } from "/src/levels";
 
-const GAMESTATE = {
+const state = {
   PAUSED: 0,
   RUNNING: 1,
   MENU: 2,
@@ -14,75 +14,75 @@ const GAMESTATE = {
 };
 
 export default class Game {
-  constructor(gameWidth, gameHeight, bricksPerRow) {
-    this.gameWidth = gameWidth;
-    this.gameHeight = gameHeight;
-    this.gamestate = GAMESTATE.MENU;
-    this.ball = new Ball(this);
-    this.paddle = new Paddle(this);
+  constructor(bredth, length, brksPerRow) {
+    this.bredth = bredth;
+    this.length = length;
+    this.state = state.MENU;
+    this.ball = new ball(this);
+    this.pad = new pad(this);
     this.gameObjects = [];
-    this.bricks = [];
+    this.brks = [];
     this.lives = 3;
 
     this.levels = [level1, level2];
     this.currentLevel = 0;
 
-    new InputHandler(this.paddle, this);
+    new inphand(this.pad, this);
   }
 
   start() {
     if (
-      this.gamestate !== GAMESTATE.MENU &&
-      this.gamestate !== GAMESTATE.NEWLEVEL
+      this.state !== state.MENU &&
+      this.state !== state.NEWLEVEL
     )
       return;
 
-    this.bricks = buildLevel(this, this.levels[this.currentLevel]);
+    this.brks = buildLevel(this, this.levels[this.currentLevel]);
     this.ball.reset();
-    this.gameObjects = [this.ball, this.paddle];
+    this.gameObjects = [this.ball, this.pad];
 
-    this.gamestate = GAMESTATE.RUNNING;
+    this.state = state.RUNNING;
   }
 
   update(deltaTime) {
-    if (this.lives === 0) this.gamestate = GAMESTATE.GAMEOVER;
+    if (this.lives === 0) this.state = state.GAMEOVER;
 
     if (
-      this.gamestate === GAMESTATE.PAUSED ||
-      this.gamestate === GAMESTATE.MENU ||
-      this.gamestate === GAMESTATE.GAMEOVER
+      this.state === state.PAUSED ||
+      this.state === state.MENU ||
+      this.state === state.GAMEOVER
     )
       return;
 
-    if (this.bricks.length === 0) {
+    if (this.brks.length === 0) {
       this.currentLevel++;
-      this.gamestate = GAMESTATE.NEWLEVEL;
+      this.state = state.NEWLEVEL;
       this.start();
     }
 
-    [...this.gameObjects, ...this.bricks].forEach(object =>
+    [...this.gameObjects, ...this.brks].forEach(object =>
       object.update(deltaTime)
     );
 
-    this.bricks = this.bricks.filter(brick => !brick.markedForDeletion);
+    this.brks = this.brks.filter(brk => !brk.markedForDeletion);
   }
 
   draw(ctx) {
-    [...this.gameObjects, ...this.bricks].forEach(object => object.draw(ctx));
+    [...this.gameObjects, ...this.brks].forEach(object => object.draw(ctx));
 
-    if (this.gamestate === GAMESTATE.PAUSED) {
-      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+    if (this.state === state.PAUSED) {
+      ctx.rect(0, 0, this.bredth, this.length);
       ctx.fillStyle = "rgba(0,0,0,0.5)";
       ctx.fill();
 
       ctx.font = "30px Arial";
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
-      ctx.fillText("Paused", this.gameWidth / 2, this.gameHeight / 2);
+      ctx.fillText("Paused", this.bredth / 2, this.length / 2);
     }
 
-    if (this.gamestate === GAMESTATE.MENU) {
-      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+    if (this.state === state.MENU) {
+      ctx.rect(0, 0, this.bredth, this.length);
       ctx.fillStyle = "rgba(0,0,0,1)";
       ctx.fill();
 
@@ -91,27 +91,27 @@ export default class Game {
       ctx.textAlign = "center";
       ctx.fillText(
         "Press SPACEBAR To Start",
-        this.gameWidth / 2,
-        this.gameHeight / 2
+        this.bredth / 2,
+        this.length / 2
       );
     }
-    if (this.gamestate === GAMESTATE.GAMEOVER) {
-      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
-      ctx.fillStyle = "rgba(0,0,0,1)";
+    if (this.state === state.GAMEOVER) {
+      ctx.rect(0, 0, this.bredth, this.length);
+      ctx.fillStyle = "rgba(0,0,4,1)";
       ctx.fill();
 
       ctx.font = "30px Arial";
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
-      ctx.fillText("GAME OVER", this.gameWidth / 2, this.gameHeight / 2);
+      ctx.fillText("GAME OVER", this.bredth / 2, this.length / 2);
     }
   }
 
   togglePause() {
-    if (this.gamestate == GAMESTATE.PAUSED) {
-      this.gamestate = GAMESTATE.RUNNING;
+    if (this.state == state.PAUSED) {
+      this.state = state.RUNNING;
     } else {
-      this.gamestate = GAMESTATE.PAUSED;
+      this.state = state.PAUSED;
     }
   }
 }
@@ -119,17 +119,17 @@ export default class Game {
 let canvas = document.getElementById("gameScreen");
 let ctx = canvas.getContext("2d");
 
-const GAME_WIDTH = 800;
-const GAME_HEIGHT = 600;
+const b = 800;
+const l = 600;
 
-let game = new Game(GAME_WIDTH, GAME_HEIGHT);
+let game = new Game(b, l);
 
 let lastTime = 0;
 function gameLoop(timestamp) {
   let deltaTime = timestamp - lastTime;
   lastTime = timestamp;
 
-  ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+  ctx.clearRect(0, 0, b, l);
 
   game.update(deltaTime);
   game.draw(ctx);
