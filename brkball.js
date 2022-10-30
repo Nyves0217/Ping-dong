@@ -1,4 +1,4 @@
-import { detectCollision } from "./coldetec";
+import { detectCollision } from "main/coldetec";
 
 export default class brk{
   constructor(game, position) {
