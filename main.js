@@ -1,5 +1,4 @@
-import pad from "/src/pad";
-import inphand from "/src/inp";
+import pad, inphand from "/src/padinp";
 import ball from "/src/ball";
 import brk from "/src/brk";
 
